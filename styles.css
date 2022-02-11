@@ -1,0 +1,50 @@
+body{
+    background-color: #fcbf49;
+}
+button{
+    margin: 10px 1px;
+    background-color: #d62828; 
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    width: 18%;
+}
+.delete-btn, .allclear-btn{
+    width: 30%;
+}
+.num-btn{
+    background-color: #f77f00;
+    width: 25%;
+}
+#zero{
+    width: 50%;
+}
+.display{
+    margin: 1em auto;
+    width: 90%;
+    height: 1em;
+    border-radius: 0%;
+    background-color: white;
+    border: 1px solid grey;
+}
+#btn-group{
+    width: 100%;
+}
+
+#calc-body{
+    margin: auto;
+    width: 300px;
+    height: 550px;
+    border: 1px solid #eae2b7;
+    border-radius: 1%;
+    padding: 10px;
+    background-color: #003049;
+}
+#calc-body button{
+   
+}
+
