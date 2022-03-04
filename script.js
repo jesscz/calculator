@@ -6,114 +6,147 @@ const decBtn = document.querySelector(".dec-btn");
 const equalsBtn = document.querySelector(".equals-btn");
 const display = document.querySelector(".display");
 
-let n1;
-let n2;
-
-let toCalculate = false; //does n1 exist? --not used rn
-
 let answer;
-decBtn.disabled = false;
-
-createDisplayValue(0); 
-
-function checkDecEx(num){ //check decimal exists
-    return Number.isInteger(num);
-}
-
-function setToCalc(){ //set to n1 if it doesnt exist and set to n2 if it does
-    if ((n1 == null) && (n2 == null)){
-        n1 = display.textContent;
-    }
-    else if (n2 == null){
-        n2 = display.textContent;
-    }
-    else {
-        //smth about 
-    }
-}
-
-allClearBtn.addEventListener("click", () => {createDisplayValue("new");});
-deleteBtn.addEventListener("click", () => {createDisplayValue("delete");});
-decBtn.addEventListener("click", () => {
-    if (decBtn.disabled == false){
-        createDisplayValue(".");
-    }
-});
+let n1 = 0;
+let n2;
+let operatorType;
+let toOperate = false;
+display.textContent = n1;
 
 numBtns.forEach(num => {
     num.addEventListener("click", () => {
         let number = num.textContent;
-        createDisplayValue(number)
+        if (toOperate == false){
+            setN1(number);
+        }
+        else if (toOperate == true){ 
+            setN2(number);
+        } 
     });
 });
-
-
 opBtns.forEach(op => {
     op.addEventListener("click", () => {
-        let operator = op.textContent;
-        if (op.textContent == "+"){
-            setToCalc();
-            createDisplayValue(operator);
+        if (toOperate == false){
+            toOperate = true;
+            setType(op.textContent);
         }
-        else if (op.textContent == "–"){
-            setToCalc();
-            createDisplayValue(operator);
+        else if ((operatorType != undefined) && (n2 != undefined)){
+            operate(operatorType,n1,n2);
+            setType(op.textContent);
+            display.textContent = answer;
+            restart();
         }
-        else if (op.textContent == "×"){
-            setToCalc();
-            createDisplayValue(operator);
+        else if ((operatorType == undefined) && (n2 != undefined)){
+            setType(op.textContent);
+            operate(operatorType,n1,n2);
+            display.textContent = answer;
+            restart();
         }
-        else if (op.textContent == "÷"){
-            setToCalc();
-            createDisplayValue(operator);
+        else{
+            setType(op.textContent);
         }
     });
 });
 
-function createDisplayValue(num){
-    if (num == "new"){
-        decBtn.disabled = false;
-        display.textContent = 0;
+equalsBtn.addEventListener("click", () => {
+    if ((operatorType != undefined) && (n2 != undefined)){
+        operate(operatorType,n1,n2);
+        display.textContent = answer;
+        restart();
+    } //else do nothing
+});
+
+allClearBtn.addEventListener("click", () => {
+    //location.reload();
+    n1 = 0;
+    n2 = undefined;
+    answer = undefined;
+    operatorType = undefined;
+    toOperate = false;
+    display.textContent = n1;
+});
+
+
+function setType(x){
+    if (x == "+"){
+        operatorType = add;
     }
-    else if (num == "delete"){
-        display.textContent = Number(display.textContent.toString().slice(0, -1));
-        if (!(checkDecEx(display.textContent))){
-            decBtn.disabled = false;
-        }
+    else if (x == "–"){
+        operatorType = subtract;
     }
-    else if (num == "."){
-        decBtn.disabled = true;
-        display.textContent += ".";
+    else if (x == "×"){
+        operatorType = multiply;
     }
-    else if (display.textContent == 0){
-        if ((display.textContent.toString().slice(-1)) == "."){ //add decimal after the zero
-            display.textContent += `${num}`;
-        }
-        else{ //change zero to other number
-            display.textContent = `${num}`;
-        }
-    }
-    else{
-        display.textContent += `${num}`;
+    else if (x == "÷"){
+        operatorType = divide;
     }
 }
 
-function operate(op,n1,n2){
-    return op(n1,n2);
+function restart(){
+    n1 = answer;
+    n2 = undefined;
+    answer = undefined;
+    //operatorType = undefined;
+}
+
+function setN1(num){
+    if (n1 == 0){
+        n1 = `${num}`;
+    }
+    else if (n1 != undefined){
+        n1 += `${num}`;
+    }
+    display.textContent = n1;
+}
+
+function setN2(num){
+    if (n2 == undefined){
+        n2 = `${num}`;
+    }
+    else if ((n2 != undefined) && (answer == undefined)){
+        n2 += `${num}`;
+    }
+    else if (answer == undefined){
+        n2 = `${num}`;
+    }
+
+    display.textContent = n2;
+}
+
+
+
+
+function operate(opType,n1,n2){
+    if (opType == add){
+        add(n1,n2);
+        return answer;
+    }
+    else if (opType == subtract){
+        subtract(n1,n2);
+        return answer;
+    }
+    else if (opType == multiply){
+        multiply(n1,n2);
+        return answer;
+    }
+    else if (opType == divide){
+        divide(n1,n2);
+        return answer;
+    }
 }
 
 function add(n1,n2){
-    return (n1+n2);
+    answer = (Number(n1)+Number(n2));
 }
 
 function subtract(n1,n2){
-    return (n1-n2);
+    answer = (Number(n1)-Number(n2));
 }
 
 function multiply(n1,n2){
-    return (n1*n2);
+    answer = (Number(n1)*Number(n2));
 }
 
 function divide(n1,n2){
-    return (n1/n2);
+    answer = (Number(n1)/Number(n2));
 }
