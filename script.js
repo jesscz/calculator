@@ -1,8 +1,8 @@
 const numBtns = document.querySelectorAll(".num-btn");
 const opBtns = document.querySelectorAll(".op-btn");
 const allClearBtn = document.querySelector(".allclear-btn");
-const deleteBtn = document.querySelector(".delete-btn");
-const decBtn = document.querySelector(".dec-btn");
+//const deleteBtn = document.querySelector(".delete-btn");
+//const decBtn = document.querySelector(".dec-btn");
 const equalsBtn = document.querySelector(".equals-btn");
 const display = document.querySelector(".display");
 
@@ -13,6 +13,10 @@ let operatorType;
 let toOperate = false;
 display.textContent = n1;
 
+// function checkDec(num){ //check decimal exists
+//     return Number.isInteger(num); //true when no decimal false when yes decimal
+// }
+
 numBtns.forEach(num => {
     num.addEventListener("click", () => {
         let number = num.textContent;
@@ -20,10 +24,12 @@ numBtns.forEach(num => {
             setN1(number);
         }
         else if (toOperate == true){ 
+            
             setN2(number);
         } 
     });
 });
+
 opBtns.forEach(op => {
     op.addEventListener("click", () => {
         if (toOperate == false){
@@ -48,6 +54,18 @@ opBtns.forEach(op => {
     });
 });
 
+// decBtn.addEventListener("click", () => {
+//     if (toOperate == false){
+//         decBtn.disabled = true;
+//         setN1(".");
+//     }
+//     else if (toOperate == true){ 
+//         decBtn.disabled = true;
+//         setN2(".");
+//     } 
+// });
+
+
 equalsBtn.addEventListener("click", () => {
     if ((operatorType != undefined) && (n2 != undefined)){
         operate(operatorType,n1,n2);
@@ -56,6 +74,7 @@ equalsBtn.addEventListener("click", () => {
     } //else do nothing
 });
 
+
 allClearBtn.addEventListener("click", () => {
     //location.reload();
     n1 = 0;
@@ -63,6 +82,7 @@ allClearBtn.addEventListener("click", () => {
     answer = undefined;
     operatorType = undefined;
     toOperate = false;
+    //decBtn.disabled = false;
     display.textContent = n1;
 });
 
@@ -82,16 +102,21 @@ function setType(x){
     }
 }
 
-function restart(){
+function restart(){ //so can restart the calculating cycle
     n1 = answer;
     n2 = undefined;
     answer = undefined;
-    //operatorType = undefined;
 }
 
 function setN1(num){
-    if (n1 == 0){
+    if ((String(n1).length) > 11){
+       return;    
+    }
+    if ((n1 == 0) && (num != ".")){
         n1 = `${num}`;
+    }
+    else if ((n1 == 0) && (num == ".")){
+        n1 += `${num}`;
     }
     else if (n1 != undefined){
         n1 += `${num}`;
@@ -100,6 +125,9 @@ function setN1(num){
 }
 
 function setN2(num){
+    if ((String(n2).length) > 11){
+        return;    
+    }
     if (n2 == undefined){
         n2 = `${num}`;
     }
